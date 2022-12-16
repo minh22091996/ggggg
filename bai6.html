@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+     var ngay  = +prompt("Nhập ngày vào");
+var thang = +prompt("Nhập tháng vào");
+var nam = +prompt("Nhập năm vào");
+
+  console.log(ngay+"/"+thang+"/"+nam);
+
+let a = ngay+"/"+thang+"/"+nam
+
+function hopLe(){
+    let ngayMax = [0,31,28,31,30,31,30,31,31,30,31,30,31];
+    if(nam<0){
+        return false;
+    }
+    if (thang > 13 && thang < 0) {
+        return false;
+    }
+    if(nam % 4 == 0){
+        ngayMax[2] = 29;
+    }
+    if(ngay>ngayMax[thang]){
+        return false
+
+    }
+    return true
+
+}
+
+if (!hopLe()) {
+    alert(a + " la ngay khong hop le");
+    
+}
+else{
+    alert(a + " là ngày hợp lệ")
+}
+    </script>
+</body>
+</html>

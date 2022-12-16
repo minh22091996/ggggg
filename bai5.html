@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            margin-top: 100px;
+        }
+      .container{
+margin-top: 100px;
+        margin: 0 auto;
+        width: 500px;
+        padding-left: 200px;
+        border: 1px solid black;
+      }
+       tr{
+        border: 1px solid black;
+       }
+       th{
+        border: 1px solid black;
+       }
+       td{
+        border: 1px solid black;
+       }
+       h1{
+        margin-left: 100px;
+       }
+       #input{
+margin-left: 50px;
+       }
+       #save{
+        background-color: blue;
+       }
+       #delete{
+        background-color: rgb(240, 11, 11);
+       }
+       #edit{
+        background-color: rgb(32, 223, 29);
+       }
+       #finish{
+        background-color: rgb(239, 234, 90);
+       }
+       #inputSearch{
+        margin-left: 50px;
+       }
+      
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>THONG TIN</h1>
+        <input type="text" id="input" placeholder="enter">
+        <button id="save" onclick="save()">CREATE</button><br><br>
+        
+        <div><input type="text" id="inputSearch" placeholder="Search">
+            <button id="search">Search</button>
+        </div>
+      
+    
+        <br><br>
+        <table class="table">
+            <tr>
+                <th>stt</th>
+                <th>san pham</th>
+                <th>trang thai</th>
+                <th>chuc nang</th>
+            </tr>
+
+            <tr>
+                <td>1</td>
+                <td>tran bong</td>
+                <td>TOT</td>
+                <td>
+                    <button id="edit" >UPDATE</button>
+                    <button id="delete" >Delete</button>
+                    <button id="finish" >READ</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>2</td>
+                <td>lan anh</td>
+                <td>TOT</td>
+                <td>
+                    <button id="edit" onclick="editItem()">UPDATE</button>
+                    <button id="delete" >Delete</button>
+                    <button id="finish">READ</button>
+                </td>
+            </tr>
+          
+            <tr>
+                <td>3</td>
+                <td>khac hung</td>
+                <td>TOT</td>
+                <td>
+                    <button id="edit">UPDATE</button>
+                    <button id="delete" >Delete</button>
+                    <button id="finish" >READ</button>
+                </td>
+            </tr>
+          
+            <tbody id="push"></tbody>
+        </table>
+    </div>
+
+    <script>
+        function save(){
+            let inputValue= document.getElementById("input");
+            let addList = JSON.parse(localStorage.getItem("data"));
+            let editKey = JSON.parse(localStorage.getItem("keyId"))
+            if(editKey != null){
+                let obj={
+                    name:inputValue.value,
+                    statusItem: "TOT",
+                }
+
+                addList.splice(editKey,1,obj)
+                localStorage.setItem("data",JSON.stringify(addList))
+                reder(addList)
+                localStorage.removeItem("keyId")
+                document.getElementById("save").innerHTML= "CREATE"
+                inputValue.value = ''
+                return
+            }
+            if(inputValue.value== ""){
+                alert("chua nhap thong tin")
+            }else if(addList == null){
+                addList = [];
+                let obj={
+                    name:inputValue.value,
+                    statusItem: "TOT",
+                }
+                addList.push(obj);
+                localStorage.setItem("data",JSON.stringify(addList))
+            }else{
+                let obj={
+                    name:inputValue.value,
+                    statusItem: "TOT",
+                }
+                addList.push(obj)
+                localStorage.setItem("data",JSON.stringify(addList))
+            }
+            reder(addList)
+            inputValue.value = ``;
+        }
+
+        let getList = JSON.parse(localStorage.getItem("data"))
+        function reder(getList){
+            let data = ``
+            for(i=0;i<getList.length;i++){
+                data+= `
+                <tr>
+                <td>${i+1}</td>
+                <td>${getList[i].name}</td>
+                <td>${getList[i].statusItem}</td>
+                <td>
+                    <button id="edit" onclick="editItem(${i})">UPDATE</button>
+                    <button id="delete" onclick="deleteItem(${i})">Delete</button>
+                    <button id="finish" onclick="read(${i})">READ</button>
+                </td>
+            </tr>
+            `
+            }
+            document.getElementById("push").innerHTML =data
+        }
+        reder(getList)
+
+        function deleteItem(i){
+            let dataDelete = JSON.parse(localStorage.getItem("data"))
+            dataDelete.splice(i,1);
+            localStorage.setItem("data",JSON.stringify(dataDelete))
+            reder(dataDelete)
+        }
+
+        function editItem(i){
+            let edit1 = JSON.parse(localStorage.getItem("data"))
+            document.getElementById("input").value = edit1[i].name
+            document.getElementById("save").innerHTML = "UPDATE"
+            let keyId = localStorage.setItem("keyId",JSON.stringify(i))
+        }
+
+        function read(i){
+            
+            let finish1 = JSON.parse(localStorage.getItem("data"))
+            
+        
+           if (finish1[i].statusItem== "TOT") {
+            finish1[i].statusItem="TRUNG BINH";
+           }else{
+            finish1[i].statusItem="TOT";
+           }
+
+           localStorage.setItem("data",JSON.stringify(finish1))
+           reder(finish1)
+        }
+     
+
+
+
+
+        let input = document.getElementById("input")
+        input.addEventListener("keypress", (event)=>{
+            if(event.key == "Enter"){
+                event.preventDefault()
+                document.getElementById("save").click()
+            }
+        })
+        
+    </script>
+</body>
+</html>
